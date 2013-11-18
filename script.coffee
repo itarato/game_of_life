@@ -22,7 +22,7 @@ init = () ->
     deadPixelImageData.data[i] = 255
   livePixelImageData.data[3] = 255
 
-  for i in [1..(h * w >> 3)]
+  for i in [1..(h * w >> 2)]
     addPoint Math.floor(Math.random() * w), Math.floor(Math.random() * h)
 
   iterate 10, ->
@@ -51,15 +51,16 @@ iterate = (ms, callback) ->
   setInterval callback, ms
 
 refreshWorld = () ->
+  _neighbors = neighbors.slice 0
   for y in [0..(h - 1)]
     for x in [0..(w - 1)]
       pos = y * w + x
       if lifeMap[pos]
-        if !neighbors[pos] || neighbors[pos] <= 1 || neighbors[pos] > 3
+        if _neighbors[pos] <= 1 || _neighbors[pos] > 3
           removePoint(x, y)
       else
-        if neighbors[pos] == 3
-          addPoint(x, y) if Math.random() > 0.18
+        if _neighbors[pos] == 3
+          addPoint(x, y)
   return
 
 init()
